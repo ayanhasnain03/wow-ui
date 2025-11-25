@@ -1,12 +1,18 @@
-import { prisma } from "@/lib/db";
+import { caller } from "@/trpc/server";
+
+
 
 const page = async() => {
-  const users = await prisma.user.findMany();
+  const greeting = await caller.hello({
+    text:"Sujo ladli"
+  });
   return (
-    <div className="">
-      {JSON.stringify(users, null, 2)}
+    <div className="text-bold text-rose-500">
+      {
+        JSON.stringify(greeting)
+      }
     </div>
-  );
-};
+  )
+}
 
-export default page;
+export default page
