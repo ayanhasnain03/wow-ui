@@ -1,7 +1,12 @@
-const page = () => {
-  return (
-    <div className="text-bold text-rose-500">page</div>
-  )
-}
+import { prisma } from "@/lib/db";
 
-export default page
+const page = async() => {
+  const users = await prisma.user.findMany();
+  return (
+    <div className="">
+      {JSON.stringify(users, null, 2)}
+    </div>
+  );
+};
+
+export default page;
