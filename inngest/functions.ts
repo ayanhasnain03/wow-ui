@@ -134,7 +134,7 @@ export const codeAgentFunction = inngest.createFunction(
     const network = createNetwork<AgentState>({
       name: "coding-agent-network",
       agents: [codeAgent],
-      maxIter: 6,
+      maxIter: 15,
       router: async ({ network }) => {
         const summary = network.state.data?.summary;
         if (summary) {
@@ -162,6 +162,7 @@ export const codeAgentFunction = inngest.createFunction(
             content: "Something went wrong while running the code. Please try again.",
             role: MessageRole.ASSISTANT,
             type: MessageType.ERROR,
+            projectId: event.data.projectId,
           }
         })
       }
@@ -176,7 +177,8 @@ export const codeAgentFunction = inngest.createFunction(
               files: JSON.stringify(result.state.data.files || {}),
               sandboxUrl: sandboxUrl,
             }
-          }
+          },
+          projectId: event.data.projectId,
         }
       })
     })
