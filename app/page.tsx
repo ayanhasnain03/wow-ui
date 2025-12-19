@@ -3,14 +3,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTRPC } from "@/trpc/client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 const Page = () => {
   const [value, setValue] = useState("");
   const trpc = useTRPC();
-  const invokeMutation = useMutation(
-    trpc.invoke.mutationOptions({
+  const {data:messages} = useQuery(
+    trpc.messages.getMany.queryOptions()
+  );
+  const createMessageMutation = useMutation(
+    trpc.messages.create.mutationOptions({
       onSuccess: () => {
         console.log("Invoked");
       },
@@ -25,13 +28,14 @@ const Page = () => {
       <Button
         className="min-w-md"
         onClick={() => {
-          invokeMutation.mutate({
+          createMessageMutation.mutate({
             value,
           });
         }}
       >
-        Invoke
+        Create Message
       </Button>
+      {JSON.stringify(messages,null,2)}
     </div>
   );
 };
