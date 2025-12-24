@@ -1,27 +1,33 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Fragment } from "@/lib/generated/prisma/client";
+import { Card } from "@/components/ui/card";
+import { Fragment } from "@/lib/generated/prisma/browser";
 import { MessageRole, MessageType } from "@/lib/generated/prisma/enums";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { ChevronRightIcon, Code2Icon } from "lucide-react";
+import { ChevronRightIcon, Code2Icon, SparklesIcon } from "lucide-react";
 import Image from "next/image";
+
 interface UserMessageProps {
   content: string;
 }
+
 const UserMessage = ({ content }: UserMessageProps) => {
   return (
-    <div className="flex justify-end pb-4 pr-2 pl-10">
-      <Card className="rounded-lg bg-muted p-3 shadow-none border-none max-w-[80%] wrap-break-word">
-        {content}
+    <div className="flex justify-end pb-4 pl-10 pr-2">
+      <Card className="max-w-[80%] border bg-muted/60 px-3 py-2 text-sm shadow-none">
+        <div className="whitespace-pre-wrap break-words leading-relaxed">
+          {content}
+        </div>
       </Card>
     </div>
   );
 };
+
 interface FragmentCardProps {
   fragment: Fragment;
   isActiveFragment: boolean;
   onFragmentClick: (fragment: Fragment) => void;
 }
+
 const FragmentCard = ({
   fragment,
   isActiveFragment,
@@ -29,35 +35,52 @@ const FragmentCard = ({
 }: FragmentCardProps) => {
   return (
     <button
+      type="button"
+      onClick={() => onFragmentClick(fragment)}
       className={cn(
-        "flex items-start gap-2 border rounded-lg bg-muted p-2.5 shadow-none border-none w-fit",
-        isActiveFragment && "bg-primary/10 border-primary/20"
+        "group w-full rounded-lg border px-3 py-2 text-left transition",
+        "hover:bg-muted/60",
+        isActiveFragment
+          ? "border-primary/40 bg-primary/5"
+          : "border-border/60 bg-muted/30"
       )}
-      onClick={() => {
-        onFragmentClick(fragment);
-      }}
     >
-      <Code2Icon className="size-4 shrink-0 text-muted-foreground" />
-      <div className="flex flex-col flex-1">
-        <span className="text-sm font-medium line-clamp-1 text-foreground">
-          {fragment.title}
-        </span>
-        <span className="text-xs text-muted-foreground">Preview</span>
-      </div>
-      <div className="flex items-center justify-center">
-        <ChevronRightIcon className="size-4 shrink-0 text-muted-foreground" />
+      <div className="flex items-center gap-2">
+        <div
+          className={cn(
+            "flex size-7 items-center justify-center rounded-md border bg-background",
+            isActiveFragment ? "border-primary/30" : "border-border/60"
+          )}
+        >
+          {isActiveFragment ? (
+            <SparklesIcon className="size-4 text-primary" />
+          ) : (
+            <Code2Icon className="size-4 text-muted-foreground" />
+          )}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-sm font-medium">{fragment.title}</div>
+          <div className="text-xs text-muted-foreground">
+            Click to open preview
+          </div>
+        </div>
+
+        <ChevronRightIcon className="size-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground" />
       </div>
     </button>
   );
 };
+
 interface AssistantMessageProps {
   content: string;
-  fragment: Fragment;
+  fragment?: Fragment | null;
   createdAt: Date;
   isActiveFragment: boolean;
   onFragmentClick: (fragment: Fragment) => void;
   type: MessageType;
 }
+
 const AssistantMessage = ({
   content,
   fragment,
@@ -67,28 +90,47 @@ const AssistantMessage = ({
   type,
 }: AssistantMessageProps) => {
   return (
-    <div
-      className={cn(
-        "flex flex-col group px-2 pb-4",
-        type === MessageType.ERROR && "text-red-700 dark:text-red-500"
+    <div className="relative pb-4 px-2">
+      {/* active indicator (minimal) */}
+      {isActiveFragment && (
+        <div className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-primary" />
       )}
-    >
-      <div className="flex items-center gap-2 pl-2 mb-2">
-        <Image
-          src="/logo.svg"
-          alt="VIBE"
-          width={18}
-          height={18}
-          className="shrink-0"
-        />
-        <span className="text-sm font-medium">VIBE</span>
-        <span className="text-xs text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
-          {format(createdAt, "HH:mm 'on' MMM dd, yyyy")}
-        </span>
+
+      <div
+        className={cn(
+          "flex items-center gap-2 py-3",
+          isActiveFragment ? "pl-3" : "pl-2"
+        )}
+      >
+        <div className="flex size-7 items-center justify-center rounded-md border bg-background">
+          <Image
+            src="/logo.svg"
+            alt="VIBE"
+            width={16}
+            height={16}
+            className="shrink-0"
+          />
+        </div>
+
+        <div className="flex items-baseline gap-2">
+          <span className="text-sm font-medium text-primary">VIBE</span>
+          <span className="text-xs text-muted-foreground">
+            {format(createdAt, "HH:mm · MMM dd, yyyy")}
+          </span>
+        </div>
       </div>
-      <div className="pl-8.5 flex flex-col gap-y-4">
-        <span>{content}</span>
-        {fragment && type === "RESULT" && (
+
+      <div className={cn("space-y-3", isActiveFragment ? "pl-10" : "pl-9")}>
+        <div
+          className={cn(
+            "whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground/90",
+            type === MessageType.ERROR && "text-red-600 dark:text-red-500"
+          )}
+        >
+          {content}
+        </div>
+
+        {fragment && type === MessageType.RESULT && (
           <FragmentCard
             fragment={fragment}
             isActiveFragment={isActiveFragment}
@@ -99,15 +141,17 @@ const AssistantMessage = ({
     </div>
   );
 };
+
 interface MessageCardProps {
   content: string;
   role: MessageRole;
-  fragment: Fragment;
+  fragment?: Fragment | null;
   createdAt: Date;
   isActiveFragment: boolean;
   onFragmentClick: (fragment: Fragment) => void;
   type: MessageType;
 }
+
 export const MessageCard = ({
   content,
   role,
@@ -129,7 +173,10 @@ export const MessageCard = ({
       />
     );
   }
+
   if (role === MessageRole.USER) {
     return <UserMessage content={content} />;
   }
+
+  return null;
 };
