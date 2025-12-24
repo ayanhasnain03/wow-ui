@@ -6,23 +6,23 @@ import z from "zod"
 
 export const messageRouter = createTRPCRouter({
     getMany: baseProcedure
-    .input(z.object({
-        projectId: z.string().min(1, { message: "Project ID is required" }),
-    }))
-    .query(async ({input})=>{
-        const messages = await prisma.message.findMany({
-            where: {
-                projectId: input.projectId,
-            },
-            orderBy:{
-                updatedAt:"asc"
-            },
-            include: {
-                fragments: true,
-            },
-        })
-        return messages;
-    }),
+        .input(z.object({
+            projectId: z.string().min(1, { message: "Project ID is required" }),
+        }))
+        .query(async ({ input }) => {
+            const messages = await prisma.message.findMany({
+                where: {
+                    projectId: input.projectId,
+                },
+                orderBy: {
+                    updatedAt: "asc"
+                },
+                include: {
+                    fragments: true,
+                },
+            })
+            return messages;
+        }),
     create: baseProcedure.input(
         z.object({
             value: z.string().min(1, { message: "Value is required" }).max(1000, { message: "Value is too long" }),
