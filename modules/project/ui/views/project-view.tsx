@@ -5,15 +5,16 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { useTRPC } from "@/trpc/client";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { MessageContainer } from "@/modules/project/ui/components/messages-container";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
+import { Fragment } from "@/lib/generated/prisma/browser";
+import { ProjectHeader } from "../components/project-header";
 
 interface Props {
   projectId: string;
 }
 export const ProjectView = ({ projectId }: Props) => {
+  const [activeFragment, setActiveFragment] = useState<Fragment | null>(null);
   return (
     <div className="h-screen">
       <ResizablePanelGroup direction="horizontal">
@@ -22,8 +23,9 @@ export const ProjectView = ({ projectId }: Props) => {
           minSize={25}
           className="flex flex-col min-h-0"
         >
+          <ProjectHeader projectId={projectId} />
           <Suspense fallback={<div>Loading Messages...</div>}>
-            <MessageContainer projectId={projectId} />
+            <MessageContainer projectId={projectId} activeFragment={activeFragment} setActiveFragment={setActiveFragment}/>
           </Suspense>
         </ResizablePanel>
         <ResizableHandle withHandle />
