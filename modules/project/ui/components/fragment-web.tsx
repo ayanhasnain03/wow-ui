@@ -21,25 +21,32 @@ export function FragmentWeb({ data }: Props) {
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <div className="flex flex-col w-full h-full min-h-0">
-      <div className="p-2 border-b bg-sidebar flex items-center gap-x-2">
-        <Hint text="Refresh" side="bottom" align="start">
-          <Button size={"sm"} variant={"outline"} onClick={onRefresh}>
-            <RefreshCwIcon />
+    <div className="flex flex-col w-full h-full min-h-0 bg-background">
+      <div className="px-5 py-3.5 border-b border-border/30 bg-background/95 backdrop-blur-md flex items-center gap-2.5 shrink-0">
+        <Hint text="Refresh preview" side="bottom" align="start">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onRefresh}
+            className="h-8 w-8 p-0 border-border/40 hover:bg-muted/80 transition-colors"
+          >
+            <RefreshCwIcon className="size-4" />
           </Button>
         </Hint>
-        <Hint text="Click to copy">
+        <Hint text="Click to copy URL">
           <Button
-            size={"sm"}
-            variant={"outline"}
+            size="sm"
+            variant="outline"
             disabled={!data.sandboxUrl || copied}
             onClick={handleCopy}
-            className="flex-1 justify-start text-start font-normal "
+            className="flex-1 justify-start text-start font-normal h-8 border-border/40 text-xs hover:bg-muted/80 transition-colors"
           >
-            <span className="truncate">{data.sandboxUrl}</span>
+            <span className="truncate font-mono">
+              {copied ? "Copied!" : (data.sandboxUrl || "No URL available")}
+            </span>
           </Button>
         </Hint>
-        <Hint text="Open in a new tab" side="bottom" align="start">
+        <Hint text="Open in new tab" side="bottom" align="start">
           <Button
             size="sm"
             disabled={!data.sandboxUrl}
@@ -48,18 +55,22 @@ export function FragmentWeb({ data }: Props) {
               if (!data.sandboxUrl) return;
               window.open(data.sandboxUrl, "_blank");
             }}
+            className="h-8 w-8 p-0 border-border/40 hover:bg-muted/80 transition-colors disabled:opacity-40"
           >
-            <ExternalLinkIcon />
+            <ExternalLinkIcon className="size-4" />
           </Button>
         </Hint>
       </div>
-      <iframe
-        key={data.sandboxUrl}
-        className="w-full h-full border-0"
-        sandbox="allow-forms allow-scripts allow-same-origin"
-        loading="lazy"
-        src={data.sandboxUrl}
-      />
+      <div className="flex-1 min-h-0 overflow-hidden bg-muted/10">
+        <iframe
+          key={fragmentKey}
+          className="w-full h-full border-0 bg-white dark:bg-background"
+          sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          loading="lazy"
+          src={data.sandboxUrl}
+          title="Preview"
+        />
+      </div>
     </div>
   );
 }

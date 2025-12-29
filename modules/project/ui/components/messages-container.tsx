@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageLoading } from "./message-loading";
+import { SparklesIcon } from "lucide-react";
 
 interface Props {
   projectId: string;
@@ -65,11 +66,11 @@ export const MessageContainer = ({
         <div
           className={cn(
             "flex flex-col",
-            hasMessages ? "py-4 px-4" : "py-12 px-4"
+            hasMessages ? "py-6" : "py-16"
           )}
         >
           {hasMessages ? (
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               {messages.map((message) => {
                 const hasFragment = !!message.fragments;
                 const isActive =
@@ -80,8 +81,8 @@ export const MessageContainer = ({
                   <div
                     key={message.id}
                     className={cn(
-                      "transition-all duration-200",
-                      isActive && "ring-1 ring-primary/20 rounded-lg -mx-1 px-1 bg-primary/5"
+                      "transition-all duration-300",
+                      isActive && "bg-primary/5 rounded-xl mx-2 px-2 py-2"
                     )}
                   >
                     <MessageCard
@@ -108,20 +109,25 @@ export const MessageContainer = ({
                <MessageLoading/>
                 )
               }
-              <div ref={bottomRef} className="h-1" />
+              <div ref={bottomRef} className="h-2" />
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full text-center">
-              <div className="text-muted-foreground/60 text-sm max-w-sm">
-                Start a conversation by asking a question or sharing what
-                you&apos;d like to work on.
+            <div className="flex flex-col items-center justify-center h-full text-center px-6">
+              <div className="size-16 rounded-2xl bg-muted/50 border border-border/30 flex items-center justify-center mb-4">
+                <SparklesIcon className="size-8 text-muted-foreground/50" />
               </div>
+              <p className="text-base font-medium text-foreground mb-2">
+                Start a conversation
+              </p>
+              <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
+                Ask a question or share what you&apos;d like to work on.
+              </p>
             </div>
           )}
         </div>
       </ScrollArea>
-      <div className="border-t border-border/50 bg-background/80 backdrop-blur-sm shrink-0">
-        <div className="p-4 pt-3">
+      <div className="border-t border-border/30 bg-background/95 backdrop-blur-md shrink-0">
+        <div className="p-5">
           <MessageForm projectId={projectId} />
         </div>
       </div>

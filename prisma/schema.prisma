@@ -12,7 +12,7 @@ model Project {
   name String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
+  userId String
   messages Message[]
 }
 enum MessageRole {
@@ -47,4 +47,9 @@ model Fragment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+model Usage {
+  key String @id
+  points Int
+  expire DateTime?
 }

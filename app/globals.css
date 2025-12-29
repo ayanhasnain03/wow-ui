@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
+@plugin "tailwind-scrollbar";
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -190,4 +190,5 @@
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
+
 }

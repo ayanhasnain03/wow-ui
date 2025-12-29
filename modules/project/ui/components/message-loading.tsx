@@ -71,7 +71,7 @@ const TypingText = () => {
   ]);
 
   return (
-    <div className="flex items-start gap-2 min-h-6">
+    <div className="flex items-start min-h-6">
       <span className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap wrap-break-word">
         {displayedText}
         <TypingCursor />
@@ -83,28 +83,28 @@ const TypingText = () => {
 export const MessageLoading = () => {
   return (
     <div
-      className="relative pb-4 px-2"
+      className="relative pb-5 px-4"
       role="status"
       aria-live="polite"
       aria-label="Loading message"
     >
-      <div className="flex items-center gap-2 py-3 pl-2">
-        <div className="flex size-7 items-center justify-center rounded-md border bg-background border-border/60">
+      <div className="flex items-center gap-3 py-3">
+        <div className="flex size-8 items-center justify-center rounded-lg border bg-background border-border/40 shadow-sm">
           <Image
             src="/logo.svg"
             alt="VIBE"
-            width={16}
-            height={16}
+            width={18}
+            height={18}
             className="shrink-0"
           />
         </div>
 
-        <div className="flex items-baseline gap-2">
-          <span className="text-sm font-medium text-primary">VIBE</span>
+        <div className="flex items-baseline gap-2.5">
+          <span className="text-sm font-semibold text-primary">VIBE</span>
         </div>
       </div>
 
-      <div className="pl-9">
+      <div className="pl-10">
         <TypingText />
       </div>
     </div>

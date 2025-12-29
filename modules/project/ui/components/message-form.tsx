@@ -69,11 +69,11 @@ const isDisabled = isPending || !form.formState.isValid;
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(
-          "relative rounded-2xl border transition-all duration-200",
-          "bg-background/50 backdrop-blur-sm",
+          "relative rounded-2xl border transition-all duration-300",
+          "bg-card/50 backdrop-blur-sm",
           isFocused
-            ? "border-border shadow-lg shadow-primary/5"
-            : "border-border/50 shadow-sm"
+            ? "border-primary/40 shadow-lg shadow-primary/5 ring-1 ring-primary/10"
+            : "border-border/40 shadow-sm hover:border-border/60"
         )}
       >
         <FormField
@@ -84,7 +84,7 @@ const isDisabled = isPending || !form.formState.isValid;
             return (
               <FormItem>
                 <FormControl>
-                  <div className="flex items-end gap-3 px-4 py-3">
+                  <div className="flex items-end gap-3 px-5 py-4">
                     <TextareaAutosize
                       {...field}
                       disabled={isPending}
@@ -95,39 +95,48 @@ const isDisabled = isPending || !form.formState.isValid;
                       placeholder="Ask a question or start a conversation..."
                       className={cn(
                         "flex-1 resize-none border-0 bg-transparent text-foreground",
-                        "placeholder:text-muted-foreground/60",
+                        "placeholder:text-muted-foreground/50",
                         "focus:ring-0 focus-visible:outline-none",
                         "text-sm leading-relaxed",
-                        "scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
+                        "scrollbar-thin scrollbar-thumb-border/30 scrollbar-track-transparent"
                       )}
                     />
-                    <div className="flex items-center gap-2 pb-0.5">
-                      {!isFocused && (
-                        <div className="hidden text-[10px] text-muted-foreground/50 sm:block">
-                          <Kbd className="text-[10px] px-1.5 py-0.5">
-                            ⌘↵
+                    <div className="flex items-center gap-2.5 pb-1">
+                      {!isFocused && !isEmpty && (
+                        <div className="hidden text-[10px] text-muted-foreground/40 sm:flex items-center gap-1">
+                          <Kbd className="text-[10px] px-1.5 py-0.5 bg-muted/60 border-border/40">
+                            ⌘
+                          </Kbd>
+                          <span className="text-[10px]">+</span>
+                          <Kbd className="text-[10px] px-1.5 py-0.5 bg-muted/60 border-border/40">
+                            ↵
                           </Kbd>
                         </div>
                       )}
                       <Button
                         type="submit"
-                        size="icon-sm"
+                        size="icon"
                         disabled={isEmpty || isDisabled}
                         className={cn(
-                          "h-7 w-7 shrink-0 rounded-full transition-all",
+                          "h-9 w-9 shrink-0 rounded-xl transition-all duration-200",
+                          "shadow-sm",
                           isEmpty
-                            ? "opacity-40"
-                            : "opacity-100 hover:scale-105 active:scale-95"
+                            ? "opacity-50 cursor-not-allowed"
+                            : "opacity-100 hover:scale-105 active:scale-95 hover:shadow-md"
                         )}
                       >
                         {
-                          isPending ? <Loader2 className="size-4 animate-spin" /> : <SendIcon className="size-4" />
+                          isPending ? (
+                            <Loader2 className="size-4 animate-spin" />
+                          ) : (
+                            <SendIcon className="size-4" />
+                          )
                         }
                       </Button>
                     </div>
                   </div>
                 </FormControl>
-                <FormMessage className="px-4 pb-2" />
+                <FormMessage className="px-5 pb-3 text-xs" />
               </FormItem>
             );
           }}

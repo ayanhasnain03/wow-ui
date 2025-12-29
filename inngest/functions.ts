@@ -23,7 +23,7 @@ export const codeAgentFunction = inngest.createFunction(
       description: "A code agent that writes readable, maintainable, and efficient code simple Next.js and React.js snippets.",
       system: PROMPT,
       model: openai({
-        model: "gpt-4.1",
+        model: "gpt-4o-mini",
         defaultParameters: {
           temperature: 0.1
         }
